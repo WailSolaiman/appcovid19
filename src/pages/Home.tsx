@@ -11,46 +11,38 @@ import {
   IonLabel,
   IonListHeader,
   IonIcon,
-  IonMenuToggle,
   useIonViewWillEnter,
+  IonFooter,
 } from "@ionic/react";
-import { globeOutline } from "ionicons/icons";
-import { getStatistics } from "../utils/api";
 import {
-  getAllConfirmedCases,
-  getAllRecoveredCases,
-  getAllDeathsCases,
-  getAllCriticalCases,
-  TotalStatistics,
-} from "../utils/utils";
+  globeOutline,
+  medicalSharp,
+  heartCircle,
+  bed,
+  thermometer,
+} from "ionicons/icons";
+import moment from "moment";
+import { getStatistics } from "../utils/api";
+import { TotalStatistics } from "../utils/utils";
 import "./Home.css";
 
 const Home: React.FC = () => {
-  const [totals, setTotals] = useState<TotalStatistics[]>([
-    {
-      country: "",
-      cases: {
-        new: "",
-        active: 0,
-        critical: 0,
-        recovered: 0,
-        total: 0,
-      },
-      deaths: {
-        new: 0,
-        total: 0,
-      },
-      tests: {
-        total: 0,
-      },
-      day: new Date(),
-      time: new Date(),
-    },
-  ]);
+  const [totals, setTotals] = useState<TotalStatistics>({
+    updated_at: "",
+    date: "",
+    deaths: 0,
+    confirmed: 0,
+    recovered: 0,
+    active: 0,
+    new_confirmed: 0,
+    new_recovered: 0,
+    new_deaths: 0,
+  });
   useIonViewWillEnter(() => {
     getStatistics()
       .then((res) => {
-        setTotals(res.data.response);
+        console.log(res.data.data[0]);
+        setTotals(res.data.data[0]);
       })
       .catch((error) => console.log(error));
   });
@@ -65,52 +57,109 @@ const Home: React.FC = () => {
       <IonContent>
         <IonList lines="full">
           <IonListHeader>
-            <IonLabel>Coronavirus monitor</IonLabel>
+            <IonLabel>Coronavirus Monitor</IonLabel>
           </IonListHeader>
-          <IonItem lines="none">
-            <IonLabel className="ion-text-wrap">
-              Statistics for all countries about COVID-19. Updated every 15
-              minutes.
+          <IonItem color="light">
+            <IonIcon icon={globeOutline} slot="start" size="small" />
+            <IonLabel className="font-uppercase-label">
+              Worldwide Cases
             </IonLabel>
           </IonItem>
           <IonItem>
-            <IonIcon icon={globeOutline} slot="start" color="primary" />
-            <IonLabel className="font-weight-label">Worldwide cases</IonLabel>
+            <IonIcon
+              icon={medicalSharp}
+              slot="start"
+              color="warning"
+              size="small"
+            />
+            <IonLabel>Confirmed</IonLabel>
+            <IonLabel className="font-weight-label" color="warning">
+              {totals.confirmed.toLocaleString("en")}
+            </IonLabel>
           </IonItem>
-          <IonMenuToggle>
-            <IonItem>
-              <IonLabel className="font-weight-label">Confirmed</IonLabel>
-              <IonLabel className="font-weight-label" color="danger">
-                {getAllConfirmedCases(totals)}
-              </IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle>
-            <IonItem>
-              <IonLabel className="font-weight-label">Recovered</IonLabel>
-              <IonLabel className="font-weight-label" color="success">
-                {getAllRecoveredCases(totals)}
-              </IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle>
-            <IonItem>
-              <IonLabel className="font-weight-label">Critical</IonLabel>
-              <IonLabel className="font-weight-label" color="warning">
-                {getAllCriticalCases(totals)}
-              </IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle>
-            <IonItem>
-              <IonLabel className="font-weight-label">Deaths</IonLabel>
-              <IonLabel className="font-weight-label" color="dark">
-                {getAllDeathsCases(totals)}
-              </IonLabel>
-            </IonItem>
-          </IonMenuToggle>
+          <IonItem>
+            <IonIcon
+              icon={thermometer}
+              slot="start"
+              color="danger"
+              size="small"
+            />
+            <IonLabel>Active</IonLabel>
+            <IonLabel className="font-weight-label" color="danger">
+              {totals.active.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonIcon
+              icon={heartCircle}
+              slot="start"
+              color="success"
+              size="small"
+            />
+            <IonLabel>Recovered</IonLabel>
+            <IonLabel className="font-weight-label" color="success">
+              {totals.recovered.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonIcon icon={bed} slot="start" color="dark" size="small" />
+            <IonLabel>Deaths</IonLabel>
+            <IonLabel className="font-weight-label" color="dark">
+              {totals.deaths.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+        </IonList>
+        <IonList lines="none">
+          <IonItem color="light">
+            <IonLabel className="font-weight-label">
+              New Casses for {moment(totals.date).format("DD.MMM.YYYY")}
+            </IonLabel>
+          </IonItem>
+          <IonItem color="light">
+            <IonIcon
+              icon={medicalSharp}
+              slot="start"
+              color="warning"
+              size="small"
+            />
+            <IonLabel>Confirmed</IonLabel>
+            <IonLabel className="font-weight-label" color="warning">
+              {totals.new_confirmed.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+          <IonItem color="light">
+            <IonIcon
+              icon={heartCircle}
+              slot="start"
+              color="success"
+              size="small"
+            />
+            <IonLabel>Recovered</IonLabel>
+            <IonLabel className="font-weight-label" color="success">
+              {totals.new_recovered.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+          <IonItem color="light">
+            <IonIcon icon={bed} slot="start" color="dark" size="small" />
+            <IonLabel>Deaths</IonLabel>
+            <IonLabel className="font-weight-label" color="dark">
+              {totals.new_deaths.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
         </IonList>
       </IonContent>
+      <IonFooter className="ion-no-border">
+        <IonToolbar>
+          <IonLabel className="ion-text-wrap">
+            <small>
+              Statistics for all countries about COVID-19.
+              <br />
+              Source: World Health Organization -WHO- Situation Reports. Updated
+              every 1 hour.
+            </small>
+          </IonLabel>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };
