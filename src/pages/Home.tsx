@@ -9,12 +9,13 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonListHeader,
   IonIcon,
   useIonViewWillEnter,
   IonFooter,
+  IonListHeader,
 } from "@ionic/react";
 import {
+  documentTextOutline,
   globeOutline,
   medicalSharp,
   heartCircle,
@@ -23,7 +24,7 @@ import {
 } from "ionicons/icons";
 import moment from "moment";
 import { getStatistics } from "../utils/api";
-import { TotalStatistics } from "../utils/utils";
+import { TotalStatistics } from "../utils/types";
 import "./Home.css";
 
 const Home: React.FC = () => {
@@ -41,7 +42,6 @@ const Home: React.FC = () => {
   useIonViewWillEnter(() => {
     getStatistics()
       .then((res) => {
-        console.log(res.data.data[0]);
         setTotals(res.data.data[0]);
       })
       .catch((error) => console.log(error));
@@ -57,13 +57,11 @@ const Home: React.FC = () => {
       <IonContent>
         <IonList lines="full">
           <IonListHeader>
-            <IonLabel>Coronavirus Monitor</IonLabel>
+            <IonLabel>COVID-19 Worldwide</IonLabel>
           </IonListHeader>
           <IonItem color="light">
             <IonIcon icon={globeOutline} slot="start" size="small" />
-            <IonLabel className="font-uppercase-label">
-              Worldwide Cases
-            </IonLabel>
+            <IonLabel>Coronavirus monitor</IonLabel>
           </IonItem>
           <IonItem>
             <IonIcon
@@ -109,13 +107,14 @@ const Home: React.FC = () => {
             </IonLabel>
           </IonItem>
         </IonList>
-        <IonList lines="none">
+        <IonList lines="full">
           <IonItem color="light">
-            <IonLabel className="font-weight-label">
-              New Casses for {moment(totals.date).format("DD.MMM.YYYY")}
+            <IonIcon icon={documentTextOutline} slot="start" size="small" />
+            <IonLabel>
+              New Casses ({moment(totals.date).format("DD.MMM.YYYY")})
             </IonLabel>
           </IonItem>
-          <IonItem color="light">
+          <IonItem>
             <IonIcon
               icon={medicalSharp}
               slot="start"
@@ -127,7 +126,7 @@ const Home: React.FC = () => {
               {totals.new_confirmed.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-          <IonItem color="light">
+          <IonItem>
             <IonIcon
               icon={heartCircle}
               slot="start"
@@ -139,7 +138,7 @@ const Home: React.FC = () => {
               {totals.new_recovered.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-          <IonItem color="light">
+          <IonItem>
             <IonIcon icon={bed} slot="start" color="dark" size="small" />
             <IonLabel>Deaths</IonLabel>
             <IonLabel className="font-weight-label" color="dark">

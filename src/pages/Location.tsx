@@ -14,42 +14,85 @@ import {
   IonSelect,
   IonSelectOption,
   useIonViewWillEnter,
-  IonItemGroup,
-  IonItemDivider,
+  IonIcon,
+  IonFooter,
 } from "@ionic/react";
+import {
+  medicalSharp,
+  heartCircle,
+  bed,
+  thermometer,
+  documentTextOutline,
+  analyticsOutline,
+} from "ionicons/icons";
+import moment from "moment";
 import { getAllCountries, getCountryStatistics } from "../utils/api";
-import { TotalStatistics } from "../utils/utils";
+import { CountryStatistics, CountriesNames } from "../utils/types";
 
 const Location: React.FC = () => {
-  const [country, setCountry] = useState("China");
-  const [countries, setCountries] = useState([]);
-  const [countryData, setCountryData] = useState<TotalStatistics>({
+  const [country, setCountry] = useState<string>("USA");
+  const [countryCode, setCountryCode] = useState<string>("US");
+  const [countries, setCountries] = useState<CountriesNames[]>([
+    {
+      name: "",
+      code: "",
+    },
+  ]);
+  const [countryStatisticsData, setCountryStatisticsData] = useState<
+    CountryStatistics
+  >({
+    coordinates: {
+      latitude: 0,
+      longitude: 0,
+    },
+    name: "",
+    code: "",
+    population: 0,
     updated_at: "",
-    date: "",
-    deaths: 0,
-    confirmed: 0,
-    recovered: 0,
-    active: 0,
-    new_confirmed: 0,
-    new_recovered: 0,
-    new_deaths: 0,
+    today: {
+      deaths: 0,
+      confirmed: 0,
+    },
+    latest_data: {
+      deaths: 0,
+      confirmed: 0,
+      recovered: 0,
+      critical: 0,
+      calculated: {
+        death_rate: 0,
+        recovery_rate: 0,
+        recovered_vs_death_ratio: 0,
+        cases_per_million_population: 0,
+      },
+    },
   });
   useIonViewWillEnter(() => {
     getAllCountries()
       .then((res) => {
-        setCountries(res.data.response);
+        const c = res.data.data;
+        const countries =
+          c &&
+          c.map((item: CountryStatistics) => {
+            return {
+              name: item.name,
+              code: item.code,
+            };
+          });
+        setCountries(countries);
       })
       .catch((error) => console.log(error));
   });
   useEffect(() => {
-    getCountryStatistics(country)
+    getCountryStatistics(countryCode)
       .then((res) => {
-        console.log(country);
-        console.log(res.data.response[0]);
-        setCountryData({ ...res.data.response[0] });
+        const x = res.data.data;
+        const { timeline, ...y } = x;
+        setCountryStatisticsData({ ...y });
+        setCountry(y.name);
       })
       .catch((error) => console.log(error));
-  }, [country]);
+  }, [countryCode]);
+  console.log(countryStatisticsData);
   return (
     <IonPage>
       <IonHeader>
@@ -61,80 +104,138 @@ const Location: React.FC = () => {
       <IonContent>
         <IonList lines="none">
           <IonListHeader>
-            <IonLabel>Location</IonLabel>
+            <IonLabel>COVID-19 by Country</IonLabel>
           </IonListHeader>
           <IonItem>
             <IonText>
               <p>Coronavirus pandemic by country and territory.</p>
             </IonText>
           </IonItem>
-          <IonItem>
+          <IonItem color="light">
             <IonLabel position="floating">Country</IonLabel>
             <IonSelect
-              value={country}
-              onIonChange={(e) => setCountry(e.detail.value)}
+              value={countryCode}
+              onIonChange={(e) => setCountryCode(e.detail.value)}
             >
               {countries.map((item, index) => (
-                <IonSelectOption key={index} value={`${item}`}>
-                  {item}
+                <IonSelectOption key={index} value={`${item.code}`}>
+                  {item.name} ({item.code})
                 </IonSelectOption>
               ))}
             </IonSelect>
           </IonItem>
         </IonList>
-        <IonItemGroup>
-          <IonItemDivider>
-            <IonLabel>Cases</IonLabel>
-          </IonItemDivider>
-          <IonItem lines="full">
-            <IonLabel>New Cases</IonLabel>
-            <IonLabel className="font-weight-label" color="primary">
-              0
-            </IonLabel>
-          </IonItem>
-          <IonItem lines="full">
-            <IonLabel>Active Cases</IonLabel>
+        <IonList lines="full">
+          <IonListHeader lines="full">
+            <IonLabel>{country}</IonLabel>
+          </IonListHeader>
+          <IonItem>
+            <IonIcon
+              icon={thermometer}
+              slot="start"
+              color="warning"
+              size="small"
+            />
+            <IonLabel>Confirmed</IonLabel>
             <IonLabel className="font-weight-label" color="warning">
-              0
+              {countryStatisticsData.latest_data.confirmed.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-          <IonItem lines="full">
-            <IonLabel>Critical</IonLabel>
-            <IonLabel className="font-weight-label" color="danger">
-              0
-            </IonLabel>
-          </IonItem>
-          <IonItem lines="full">
+          <IonItem>
+            <IonIcon
+              icon={heartCircle}
+              slot="start"
+              color="success"
+              size="small"
+            />
             <IonLabel>Recovered</IonLabel>
             <IonLabel className="font-weight-label" color="success">
-              0
+              {countryStatisticsData.latest_data.recovered.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-          <IonItem lines="full">
-            <IonLabel>Total</IonLabel>
-            <IonLabel className="font-weight-label" color="dark">
-              0
+          <IonItem>
+            <IonIcon
+              icon={medicalSharp}
+              slot="start"
+              color="danger"
+              size="small"
+            />
+            <IonLabel>Critical</IonLabel>
+            <IonLabel className="font-weight-label" color="danger">
+              {countryStatisticsData.latest_data.critical.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-        </IonItemGroup>
-        <IonItemGroup>
-          <IonItemDivider>
+          <IonItem>
+            <IonIcon icon={bed} slot="start" color="dark" size="small" />
             <IonLabel>Deaths</IonLabel>
-          </IonItemDivider>
-          <IonItem lines="full">
-            <IonLabel>New</IonLabel>
             <IonLabel className="font-weight-label" color="dark">
-              0
+              {countryStatisticsData.latest_data.deaths.toLocaleString("en")}
             </IonLabel>
           </IonItem>
-          <IonItem lines="full">
-            <IonLabel>Total</IonLabel>
-            <IonLabel className="font-weight-label" color="dark">
-              0
+        </IonList>
+        <IonList lines="full">
+          <IonItem color="light">
+            <IonIcon icon={documentTextOutline} slot="start" size="small" />
+            <IonLabel>
+              New Casses{" "}
+              {moment(countryStatisticsData.updated_at).format("DD.MMM.YYYY")}
             </IonLabel>
           </IonItem>
-        </IonItemGroup>
+          <IonItem>
+            <IonIcon
+              icon={thermometer}
+              slot="start"
+              color="warning"
+              size="small"
+            />
+            <IonLabel>Confirmed</IonLabel>
+            <IonLabel className="font-weight-label" color="warning">
+              {countryStatisticsData.today.confirmed.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonIcon icon={bed} slot="start" color="dark" size="small" />
+            <IonLabel>Deaths</IonLabel>
+            <IonLabel className="font-weight-label" color="dark">
+              {countryStatisticsData.today.deaths.toLocaleString("en")}
+            </IonLabel>
+          </IonItem>
+        </IonList>
+        <IonList lines="full">
+          <IonItem color="light">
+            <IonIcon icon={analyticsOutline} slot="start" size="small" />
+            <IonLabel>Statistics</IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Recovery Rate</IonLabel>
+            <IonLabel className="font-weight-label" color="success">
+              {countryStatisticsData.latest_data.calculated.recovery_rate.toFixed(
+                2
+              )}
+            </IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Deaths Rate</IonLabel>
+            <IonLabel className="font-weight-label" color="dark">
+              {countryStatisticsData.latest_data.calculated.death_rate.toFixed(
+                2
+              )}
+            </IonLabel>
+          </IonItem>
+        </IonList>
       </IonContent>
+      <IonFooter className="ion-no-border">
+        <IonToolbar>
+          <IonLabel className="ion-text-wrap">
+            <small>
+              Statistics for all countries about COVID-19.
+              <br />
+              Source: World Health Organization -WHO- Situation Reports. Updated
+              every 1 hour.
+            </small>
+          </IonLabel>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };
