@@ -5,10 +5,7 @@ import { IonApp, IonRouterOutlet, IonSplitPane, IonPage } from "@ionic/react";
 import Menu from "./components/Menu";
 import Tabs from "./components/Tabs";
 import Home from "./pages/Home";
-import Statistics from "./pages/Statistics";
 import Location from "./pages/Location";
-import Symptoms from "./pages/Symptoms";
-import Prevention from "./pages/Prevention";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -46,9 +43,6 @@ const App: React.FC = () => (
             <IonRouterOutlet>
               <Route path="/home" component={Home} exact={true} />
               <Route path="/location" component={Location} exact={true} />
-              <Route path="/statistics" component={Statistics} exact={true} />
-              <Route path="/symptoms" component={Symptoms} exact={true} />
-              <Route path="/prevention" component={Prevention} exact={true} />
               <Route path="/about" component={About} exact={true} />
               <Route path="/profile" component={Profile} exact={true} />
               <Route path="/register" component={Register} exact={true} />

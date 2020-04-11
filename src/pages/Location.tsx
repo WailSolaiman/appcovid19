@@ -92,7 +92,6 @@ const Location: React.FC = () => {
       })
       .catch((error) => console.log(error));
   }, [countryCode]);
-  console.log(countryStatisticsData);
   return (
     <IonPage>
       <IonHeader>

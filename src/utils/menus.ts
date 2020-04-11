@@ -1,16 +1,13 @@
 import {
-  home,
-  informationCircle,
-  location,
-  statsChart,
-  alert,
-  medkit,
-  person,
-  at,
-  create,
-  personAdd,
-  logIn,
-  logOut,
+  homeOutline,
+  informationCircleOutline,
+  locationOutline,
+  personOutline,
+  atOutline,
+  createOutline,
+  personAddOutline,
+  logInOutline,
+  logOutOutline,
 } from "ionicons/icons";
 
 export type UserInfos = {
@@ -32,9 +29,9 @@ export type NavigationItems = {
 export const userInfos: UserInfos = {
   username: "willard82",
   email: "waily2@hotmail.com",
-  userIcon: person,
-  mailIcon: at,
-  profileIcon: create,
+  userIcon: personOutline,
+  mailIcon: atOutline,
+  profileIcon: createOutline,
   link: "/profile",
   label: "Profile",
 };
@@ -42,32 +39,17 @@ export const userInfos: UserInfos = {
 export const navigateItems: NavigationItems[] = [
   {
     label: "Home",
-    icon: home,
+    icon: homeOutline,
     link: "/home",
   },
   {
     label: "Location",
-    icon: location,
+    icon: locationOutline,
     link: "/location",
   },
   {
-    label: "Statistics",
-    icon: statsChart,
-    link: "/statistics",
-  },
-  {
-    label: "Symptoms",
-    icon: alert,
-    link: "/symptoms",
-  },
-  {
-    label: "Prevention",
-    icon: medkit,
-    link: "/prevention",
-  },
-  {
     label: "About",
-    icon: informationCircle,
+    icon: informationCircleOutline,
     link: "/about",
   },
 ];
@@ -75,17 +57,17 @@ export const navigateItems: NavigationItems[] = [
 export const accountItems: NavigationItems[] = [
   {
     label: "Register",
-    icon: personAdd,
+    icon: personAddOutline,
     link: "/register",
   },
   {
     label: "Login",
-    icon: logIn,
+    icon: logInOutline,
     link: "/login",
   },
   {
     label: "Logout",
-    icon: logOut,
+    icon: logOutOutline,
     link: "/logout",
   },
 ];

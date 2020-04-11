@@ -6,7 +6,7 @@ import {
   IonLabel,
   IonTabs,
 } from "@ionic/react";
-import { location, statsChart, alert, medkit } from "ionicons/icons";
+import { locationOutline, globeOutline, personOutline } from "ionicons/icons";
 
 type TabItems = {
   label: string;
@@ -17,24 +17,19 @@ type TabItems = {
 const Tabs: React.FC = ({ children }) => {
   const tabItems: TabItems[] = [
     {
+      label: "Profile",
+      icon: personOutline,
+      link: "profile",
+    },
+    {
+      label: "Worldwide",
+      icon: globeOutline,
+      link: "home",
+    },
+    {
       label: "Location",
-      icon: location,
+      icon: locationOutline,
       link: "location",
-    },
-    {
-      label: "Statistics",
-      icon: statsChart,
-      link: "statistics",
-    },
-    {
-      label: "Symptoms",
-      icon: alert,
-      link: "symptoms",
-    },
-    {
-      label: "Prevention",
-      icon: medkit,
-      link: "prevention",
     },
   ];
 
