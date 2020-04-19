@@ -7,9 +7,8 @@ import {
   IonPage,
 } from "@ionic/react";
 import React from "react";
-import ExploreContainer from "../components/ExploreContainer";
 
-const About: React.FC = () => {
+const About: React.FC = (): JSX.Element => {
   return (
     <IonPage>
       <IonHeader>
@@ -24,7 +23,6 @@ const About: React.FC = () => {
             <IonTitle size="large">About</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer />
       </IonContent>
     </IonPage>
   );

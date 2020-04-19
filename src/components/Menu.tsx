@@ -11,7 +11,7 @@ import MenuItems from "./MenuItems";
 import UserMenu from "./UserMenu";
 import { userInfos, navigateItems, accountItems } from "../utils/menus";
 
-const Menu: React.FC<any> = ({ history }) => {
+const Menu: React.FC<any> = ({ history }): JSX.Element => {
   const _userInfos = userInfos;
   const _navigateItems = navigateItems;
   const _accountItems = accountItems;

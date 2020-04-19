@@ -8,14 +8,14 @@ import {
 } from "@ionic/react";
 import { locationOutline, globeOutline, personOutline } from "ionicons/icons";
 
-type TabItems = {
+interface ITabItems {
   label: string;
   icon: any;
   link: string;
-};
+}
 
-const Tabs: React.FC = ({ children }) => {
-  const tabItems: TabItems[] = [
+const Tabs: React.FC<React.ReactNode> = ({ children }) => {
+  const tabItems: ITabItems[] = [
     {
       label: "Profile",
       icon: personOutline,

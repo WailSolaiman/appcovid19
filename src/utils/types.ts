@@ -1,4 +1,4 @@
-export type TotalStatistics = {
+export interface ITotalStatistics {
   updated_at: string;
   date: string;
   deaths: number;
@@ -8,9 +8,9 @@ export type TotalStatistics = {
   new_confirmed: number;
   new_recovered: number;
   new_deaths: number;
-};
+}
 
-export type CountryStatistics = {
+export interface ICountryStatistics {
   coordinates: {
     latitude: number;
     longitude: number;
@@ -35,9 +35,54 @@ export type CountryStatistics = {
       cases_per_million_population: number;
     };
   };
-};
+}
 
-export type CountriesNames = {
-  name: string;
-  code: string;
-};
+export interface ISelector {
+  header: string;
+  subHeader: string;
+  selectedText: string;
+  getCountryData: (country: ICountryStatistics) => void;
+  countries: Array<ICountryStatistics>;
+  toastMessage: string;
+}
+
+export interface IListItems {
+  header: string;
+  isHeader: boolean;
+  subHeader: string;
+  subHeaderIcon: string;
+  items: Array<{
+    color: string;
+    icon: string;
+    iconColor: string;
+    label: string;
+    labelColor: string;
+    labelContent: number;
+  }>;
+}
+
+export interface IUserMenu {
+  header: string;
+  userInfos: {
+    label: string;
+    link: string;
+    userIcon: string;
+    mailIcon: string;
+    profileIcon: string;
+    username: string;
+    email: string;
+  };
+  history: Array<string>;
+}
+
+export interface IUserData {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface IMenuItems {
+  label: string;
+  menuItems: Array<{ label: string; link: string; icon: string }>;
+  history: Array<string>;
+}

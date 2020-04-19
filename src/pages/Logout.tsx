@@ -11,7 +11,7 @@ import {
 import React from "react";
 import "./Home.css";
 
-const Logout: React.FC = () => {
+const Logout: React.FC = (): JSX.Element => {
   return (
     <IonPage>
       <IonHeader>

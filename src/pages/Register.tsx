@@ -11,7 +11,7 @@ import {
 import React from "react";
 import "./Home.css";
 
-const Register: React.FC = () => {
+const Register: React.FC = (): JSX.Element => {
   return (
     <IonPage>
       <IonHeader>

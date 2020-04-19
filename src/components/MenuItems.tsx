@@ -8,12 +8,13 @@ import {
   IonList,
 } from "@ionic/react";
 import { NavigationItems } from "../utils/menus";
+import { IMenuItems } from "../utils/types";
 
-const MenuItems: React.FC<any> = ({
+const MenuItems: React.FC<IMenuItems> = ({
   label = "",
   menuItems = [{ label: "", link: "", icon: "" }],
   history = [],
-}) => {
+}): JSX.Element => {
   return (
     <IonList lines="full">
       <IonListHeader>

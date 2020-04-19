@@ -7,12 +7,21 @@ import {
   IonIcon,
   IonList,
 } from "@ionic/react";
+import { IUserMenu } from "../utils/types";
 
-const UserMenu: React.FC<any> = ({
+const UserMenu: React.FC<IUserMenu> = ({
   header = "",
-  userInfos = {},
+  userInfos = {
+    label: "",
+    link: "",
+    userIcon: "",
+    mailIcon: "",
+    profileIcon: "",
+    username: "",
+    email: "",
+  },
   history = [],
-}) => {
+}): JSX.Element => {
   const {
     label,
     link,

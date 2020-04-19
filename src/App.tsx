@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
+import { createNewDataContainer } from "./utils/utils";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -33,28 +34,34 @@ import "./theme/variables.css";
 /* Global Styles */
 import "./styles.css";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonSplitPane contentId="main">
-        <Menu />
-        <IonPage id="main">
-          <Tabs>
-            <IonRouterOutlet>
-              <Route path="/home" component={Home} exact={true} />
-              <Route path="/location" component={Location} exact={true} />
-              <Route path="/about" component={About} exact={true} />
-              <Route path="/profile" component={Profile} exact={true} />
-              <Route path="/register" component={Register} exact={true} />
-              <Route path="/login" component={Login} exact={true} />
-              <Route path="/logout" component={Logout} exact={true} />
-              <Route exact path="/" render={() => <Redirect to="/home" />} />
-            </IonRouterOutlet>
-          </Tabs>
-        </IonPage>
-      </IonSplitPane>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = (): JSX.Element => {
+  React.useEffect(() => {
+    createNewDataContainer();
+  }, []);
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonSplitPane contentId="main">
+          <Menu />
+          <IonPage id="main">
+            <Tabs>
+              <IonRouterOutlet>
+                <Route path="/home" component={Home} exact={true} />
+                <Route path="/location" component={Location} exact={true} />
+                <Route path="/about" component={About} exact={true} />
+                <Route path="/profile" component={Profile} exact={true} />
+                <Route path="/register" component={Register} exact={true} />
+                <Route path="/login" component={Login} exact={true} />
+                <Route path="/logout" component={Logout} exact={true} />
+                <Route exact path="/" render={() => <Redirect to="/home" />} />
+              </IonRouterOutlet>
+            </Tabs>
+          </IonPage>
+        </IonSplitPane>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

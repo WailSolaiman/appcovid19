@@ -10,7 +10,7 @@ import {
   logOutOutline,
 } from "ionicons/icons";
 
-export type UserInfos = {
+export interface UserInfos {
   username: string;
   email: string;
   userIcon: any;
@@ -18,13 +18,13 @@ export type UserInfos = {
   profileIcon: any;
   link: string;
   label: string;
-};
+}
 
-export type NavigationItems = {
+export interface NavigationItems {
   label: string;
   icon: any;
   link: string;
-};
+}
 
 export const userInfos: UserInfos = {
   username: "willard82",
