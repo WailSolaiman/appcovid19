@@ -41,7 +41,7 @@ const Selector: React.FC<ISelector> = ({
         <IonItem color="light">
           <IonLabel position="floating">Country</IonLabel>
           <IonSelect
-            selectedText={selectedText}
+            selectedText={countries.length === 0 ? "" : selectedText}
             value={selectedCountries}
             multiple={false}
             placeholder="Select Country"

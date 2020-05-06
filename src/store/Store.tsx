@@ -1,8 +1,17 @@
 import React from "react";
-import { ITotalStatistics, ICountryStatistics } from "../utils/types";
-import { worldwideDataInitial, countriesDataInitial } from "../utils/init";
+import {
+  IUserData,
+  ITotalStatistics,
+  ICountryStatistics,
+} from "../utils/types";
+import {
+  userDataInit,
+  worldwideDataInitial,
+  countriesDataInitial,
+} from "../utils/init";
 
 interface IState {
+  user: IUserData;
   worldwideData: ITotalStatistics;
   countries: Array<ICountryStatistics>;
   countryData: ICountryStatistics;
@@ -15,6 +24,7 @@ export interface IAction {
 }
 
 const initialeState: IState = {
+  user: userDataInit,
   worldwideData: worldwideDataInitial,
   countries: [],
   countryData: countriesDataInitial,
@@ -25,6 +35,8 @@ export const Store = React.createContext<IState | any>(initialeState);
 
 const reducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
+    case "UPDATE_USER":
+      return { ...state, user: action.payload };
     case "FETCH_API_COVID_GLOBAL_DATA":
       return { ...state, worldwideData: action.payload };
     case "FETCH_API_COVID_COUNTRIES_DATA":

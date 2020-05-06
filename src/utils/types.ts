@@ -61,28 +61,14 @@ export interface IListItems {
   }>;
 }
 
-export interface IUserMenu {
-  header: string;
-  userInfos: {
-    label: string;
-    link: string;
-    userIcon: string;
-    mailIcon: string;
-    profileIcon: string;
-    username: string;
-    email: string;
-  };
-  history: Array<string>;
-}
-
 export interface IUserData {
-  username: string;
+  uid: string;
+  isAuthenticated: boolean;
+  displayName: string;
   email: string;
-  password: string;
 }
 
 export interface IMenuItems {
   label: string;
   menuItems: Array<{ label: string; link: string; icon: string }>;
-  history: Array<string>;
 }

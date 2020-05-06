@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import {
   IonListHeader,
   IonLabel,
@@ -13,8 +14,8 @@ import { IMenuItems } from "../utils/types";
 const MenuItems: React.FC<IMenuItems> = ({
   label = "",
   menuItems = [{ label: "", link: "", icon: "" }],
-  history = [],
 }): JSX.Element => {
+  const history = useHistory();
   return (
     <IonList lines="full">
       <IonListHeader>

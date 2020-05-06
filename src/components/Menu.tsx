@@ -1,5 +1,4 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 import {
   IonMenu,
   IonContent,
@@ -7,12 +6,13 @@ import {
   IonToolbar,
   IonTitle,
 } from "@ionic/react";
+import { Store } from "../store/Store";
 import MenuItems from "./MenuItems";
 import UserMenu from "./UserMenu";
-import { userInfos, navigateItems, accountItems } from "../utils/menus";
+import { navigateItems, accountItems } from "../utils/menus";
 
-const Menu: React.FC<any> = ({ history }): JSX.Element => {
-  const _userInfos = userInfos;
+const Menu: React.FC = (): JSX.Element => {
+  const { state } = React.useContext(Store);
   const _navigateItems = navigateItems;
   const _accountItems = accountItems;
   return (
@@ -23,20 +23,14 @@ const Menu: React.FC<any> = ({ history }): JSX.Element => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <UserMenu header="User" userInfos={_userInfos} history={history} />
-        <MenuItems
-          label="Navigate"
-          menuItems={_navigateItems}
-          history={history}
-        />
-        <MenuItems
-          label="Account"
-          menuItems={_accountItems}
-          history={history}
-        />
+        {state.user.isAuthenticated && <UserMenu />}
+        <MenuItems label="Navigate" menuItems={_navigateItems} />
+        {!state.user.isAuthenticated && (
+          <MenuItems label="Account" menuItems={_accountItems} />
+        )}
       </IonContent>
     </IonMenu>
   );
 };
 
-export default withRouter(Menu);
+export default Menu;

@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import {
   IonListHeader,
   IonLabel,
@@ -7,66 +8,72 @@ import {
   IonIcon,
   IonList,
 } from "@ionic/react";
-import { IUserMenu } from "../utils/types";
+import {
+  personOutline,
+  atOutline,
+  createOutline,
+  logOutOutline,
+} from "ionicons/icons";
+import { Store } from "../store/Store";
+import { app } from "../firebaseConfig";
+import { notificationMessage } from "../utils/utils";
+import { userDataInit } from "../utils/init";
 
-const UserMenu: React.FC<IUserMenu> = ({
-  header = "",
-  userInfos = {
-    label: "",
-    link: "",
-    userIcon: "",
-    mailIcon: "",
-    profileIcon: "",
-    username: "",
-    email: "",
-  },
-  history = [],
-}): JSX.Element => {
-  const {
-    label,
-    link,
-    userIcon,
-    mailIcon,
-    profileIcon,
-    username,
-    email,
-  } = userInfos;
+const UserMenu: React.FC = (): JSX.Element => {
+  const { state, dispatch } = React.useContext(Store);
+  const history = useHistory();
   return (
     <IonList lines="full">
       <IonListHeader>
-        <IonLabel>{header}</IonLabel>
+        <IonLabel>User</IonLabel>
       </IonListHeader>
       <IonMenuToggle>
         <IonItem lines="full">
           <IonIcon
-            icon={`${userIcon}`}
+            icon={personOutline}
             slot="start"
             color="primary"
             size="small"
           />
-          <IonLabel>{username}</IonLabel>
+          <IonLabel>{state.user.displayName}</IonLabel>
         </IonItem>
       </IonMenuToggle>
       <IonMenuToggle>
         <IonItem lines="full">
-          <IonIcon
-            icon={`${mailIcon}`}
-            slot="start"
-            color="primary"
-            size="small"
-          />
-          <IonLabel>{email}</IonLabel>
+          <IonIcon icon={atOutline} slot="start" color="primary" size="small" />
+          <IonLabel>{state.user.email}</IonLabel>
         </IonItem>
       </IonMenuToggle>
       <IonMenuToggle>
-        <IonItem onClick={() => history.push(`${link}`)} lines="full">
+        <IonItem onClick={() => history.push("/profile")} lines="full">
           <IonIcon
-            icon={`${profileIcon}`}
+            icon={createOutline}
             slot="start"
             color="primary"
             size="small"
           />
-          <IonLabel>{label}</IonLabel>
+          <IonLabel>Profile</IonLabel>
+        </IonItem>
+      </IonMenuToggle>
+      <IonMenuToggle>
+        <IonItem
+          onClick={() => {
+            app.auth().signOut();
+            dispatch({
+              type: "UPDATE_USER",
+              payload: userDataInit,
+            });
+            notificationMessage("You have logged out!");
+          }}
+          lines="full"
+        >
+          <IonIcon
+            icon={logOutOutline}
+            slot="start"
+            color="primary"
+            size="small"
+          />
+          <IonLabel>Logout</IonLabel>
         </IonItem>
       </IonMenuToggle>
     </IonList>

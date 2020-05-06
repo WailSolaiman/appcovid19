@@ -27,18 +27,18 @@ import {
 import { AxiosResponse, AxiosError } from "axios";
 import moment from "moment";
 import { Store } from "../store/Store";
+import { app } from "../firebaseConfig";
 import ListItems from "../components/ListItems ";
 import Selector from "../components/Selector";
 import Footer from "../components/Footer";
 import { getAllCountries, getCountryStatistics } from "../utils/api";
 import { ICountryStatistics } from "../utils/types";
-import {
-  addItemToDataContainer,
-  isItemExistInDataContainer,
-} from "../utils/utils";
+
+const DB = app.firestore();
 
 const Location: React.FC = (): JSX.Element => {
   const { state, dispatch } = React.useContext(Store);
+  const [disabled, setDisabled] = React.useState<boolean>(false);
   const [addItemAlert, setAddItemAlert] = React.useState<boolean>(false);
   const [showToast, setShowToast] = React.useState<boolean>(false);
 
@@ -72,6 +72,22 @@ const Location: React.FC = (): JSX.Element => {
       .catch((error: AxiosError) => console.log(error.message));
   };
 
+  React.useEffect(() => {
+    if (state.countryData.code !== "") {
+      const cntRef = DB.collection("users")
+        .doc(state.user.uid)
+        .collection("countries")
+        .doc(state.countryData.code);
+      cntRef.get().then((doc) => {
+        if (doc.exists) {
+          setDisabled(true);
+        } else {
+          setDisabled(false);
+        }
+      });
+    }
+  }, [state.countryData, state.user.uid, disabled]);
+
   return (
     <IonPage>
       <IonHeader>
@@ -100,10 +116,7 @@ const Location: React.FC = (): JSX.Element => {
               size="small"
               onClick={() => setAddItemAlert(true)}
               disabled={
-                isItemExistInDataContainer(state.countryData.code) ||
-                state.countryData.name === ""
-                  ? true
-                  : false
+                disabled || state.countryData.name === "" ? true : false
               }
             >
               <IonIcon slot="start" icon={star} />
@@ -223,7 +236,15 @@ const Location: React.FC = (): JSX.Element => {
             {
               text: "Okay",
               handler: () => {
-                addItemToDataContainer(state.countryData);
+                const cntRef = DB.collection("users")
+                  .doc(state.user.uid)
+                  .collection("countries")
+                  .doc(state.countryData.code);
+                cntRef.get().then((doc) => {
+                  if (!doc.exists) {
+                    cntRef.set(state.countryData);
+                  }
+                });
                 setShowToast(true);
               },
             },
@@ -231,7 +252,7 @@ const Location: React.FC = (): JSX.Element => {
         />
         <IonToast
           isOpen={showToast}
-          position="top"
+          position="bottom"
           onDidDismiss={() => setShowToast(false)}
           message={`${state.countryData.name} has been added to your favourite list.`}
           duration={2000}

@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonReactRouter } from "@ionic/react-router";
 import { IonApp, IonRouterOutlet, IonSplitPane, IonPage } from "@ionic/react";
+import { Store } from "./store/Store";
 import Menu from "./components/Menu";
 import Tabs from "./components/Tabs";
 import Home from "./pages/Home";
@@ -10,8 +11,7 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Logout from "./pages/Logout";
-import { createNewDataContainer } from "./utils/utils";
+// import { createNewDataContainer } from "./utils/utils";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -35,9 +35,11 @@ import "./theme/variables.css";
 import "./styles.css";
 
 const App: React.FC = (): JSX.Element => {
+  const { state } = React.useContext(Store);
+
   React.useEffect(() => {
-    createNewDataContainer();
-  }, []);
+    console.log("state: ", state);
+  }, [state]);
 
   return (
     <IonApp>
@@ -47,14 +49,43 @@ const App: React.FC = (): JSX.Element => {
           <IonPage id="main">
             <Tabs>
               <IonRouterOutlet>
-                <Route path="/home" component={Home} exact={true} />
-                <Route path="/location" component={Location} exact={true} />
+                <Route
+                  exact={true}
+                  path="/home"
+                  render={() => {
+                    return state.user.isAuthenticated ? (
+                      <Home />
+                    ) : (
+                      <Redirect to="/login" />
+                    );
+                  }}
+                />
+                <Route
+                  exact={true}
+                  path="/profile"
+                  render={() => {
+                    return state.user.isAuthenticated ? (
+                      <Profile />
+                    ) : (
+                      <Redirect to="/login" />
+                    );
+                  }}
+                />
+                <Route
+                  exact={true}
+                  path="/location"
+                  render={() => {
+                    return state.user.isAuthenticated ? (
+                      <Location />
+                    ) : (
+                      <Redirect to="/login" />
+                    );
+                  }}
+                />
                 <Route path="/about" component={About} exact={true} />
-                <Route path="/profile" component={Profile} exact={true} />
                 <Route path="/register" component={Register} exact={true} />
                 <Route path="/login" component={Login} exact={true} />
-                <Route path="/logout" component={Logout} exact={true} />
-                <Route exact path="/" render={() => <Redirect to="/home" />} />
+                <Redirect exact from="/" to="/login" />
               </IonRouterOutlet>
             </Tabs>
           </IonPage>

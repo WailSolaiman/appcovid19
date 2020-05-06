@@ -2,23 +2,23 @@ import {
   homeOutline,
   informationCircleOutline,
   locationOutline,
-  personOutline,
-  atOutline,
-  createOutline,
+  // personOutline,
+  // atOutline,
+  // createOutline,
   personAddOutline,
   logInOutline,
-  logOutOutline,
+  // logOutOutline,
 } from "ionicons/icons";
 
-export interface UserInfos {
-  username: string;
-  email: string;
-  userIcon: any;
-  mailIcon: any;
-  profileIcon: any;
-  link: string;
-  label: string;
-}
+// export interface UserInfos {
+//   username: string;
+//   email: string;
+//   userIcon: any;
+//   mailIcon: any;
+//   profileIcon: any;
+//   link: string;
+//   label: string;
+// }
 
 export interface NavigationItems {
   label: string;
@@ -26,15 +26,15 @@ export interface NavigationItems {
   link: string;
 }
 
-export const userInfos: UserInfos = {
-  username: "willard82",
-  email: "waily2@hotmail.com",
-  userIcon: personOutline,
-  mailIcon: atOutline,
-  profileIcon: createOutline,
-  link: "/profile",
-  label: "Profile",
-};
+// export const userInfos: UserInfos = {
+//   username: "willard82",
+//   email: "waily2@hotmail.com",
+//   userIcon: personOutline,
+//   mailIcon: atOutline,
+//   profileIcon: createOutline,
+//   link: "/profile",
+//   label: "Profile",
+// };
 
 export const navigateItems: NavigationItems[] = [
   {
@@ -56,18 +56,13 @@ export const navigateItems: NavigationItems[] = [
 
 export const accountItems: NavigationItems[] = [
   {
-    label: "Register",
-    icon: personAddOutline,
-    link: "/register",
-  },
-  {
     label: "Login",
     icon: logInOutline,
     link: "/login",
   },
   {
-    label: "Logout",
-    icon: logOutOutline,
-    link: "/logout",
+    label: "Register",
+    icon: personAddOutline,
+    link: "/register",
   },
 ];

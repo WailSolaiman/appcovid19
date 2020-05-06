@@ -36,3 +36,10 @@ export const countriesDataInitial = {
     },
   },
 };
+
+export const userDataInit = {
+  uid: "",
+  isAuthenticated: false,
+  displayName: "",
+  email: "",
+};

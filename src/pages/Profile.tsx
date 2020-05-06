@@ -12,6 +12,7 @@ import {
   IonIcon,
   IonToast,
   IonAlert,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import {
   medicalSharp,
@@ -23,34 +24,50 @@ import {
   globeOutline,
   star,
 } from "ionicons/icons";
-import UserData from "../components/UserData";
 import moment from "moment";
 import { Store } from "../store/Store";
+import { app } from "../firebaseConfig";
 import ListItems from "../components/ListItems ";
 import Selector from "../components/Selector";
 import { ICountryStatistics } from "../utils/types";
-import {
-  getItemFromDataContainer,
-  removeItemFromDataContainer,
-  getAllItemsFromDataContainer,
-} from "../utils/utils";
 import { countriesDataInitial } from "../utils/init";
+
+const DB = app.firestore();
 
 const Profile: React.FC = (): JSX.Element => {
   const { state, dispatch } = React.useContext(Store);
   const [removeItemAlert, setRemoveItemAlert] = React.useState<boolean>(false);
   const [showToast, setShowToast] = React.useState<boolean>(false);
+  const [favCountries, setFavCountries] = React.useState<ICountryStatistics[]>(
+    []
+  );
 
-  React.useEffect(() => {
-    getAllItemsFromDataContainer();
-  }, [state]);
-
-  const getCountryData = (countryx: ICountryStatistics): void => {
-    const c: string = countryx.code;
-    const country: ICountryStatistics = getItemFromDataContainer(c);
+  useIonViewDidLeave(() => {
     dispatch({
       type: "UPDATE_FAV_COUNTRY_DATA",
-      payload: country,
+      payload: countriesDataInitial,
+    });
+  });
+
+  React.useEffect(() => {
+    DB.collection("users")
+      .doc(state.user.uid)
+      .collection("countries")
+      .orderBy("name")
+      .onSnapshot((serverUpdate) => {
+        const countries: any[] = serverUpdate.docs.map((_doc) => {
+          const data = _doc.data();
+          data["id"] = _doc.id;
+          return data;
+        });
+        setFavCountries(countries);
+      });
+  }, [state.favCountryData, state.user]);
+
+  const getCountryData = (countryData: ICountryStatistics): void => {
+    dispatch({
+      type: "UPDATE_FAV_COUNTRY_DATA",
+      payload: countryData,
     });
   };
 
@@ -63,14 +80,13 @@ const Profile: React.FC = (): JSX.Element => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <UserData />
         <div>
           <Selector
             header="User favourite countries"
             subHeader="Coronavirus pandemic by country and territory."
             selectedText={state.favCountryData.name}
             getCountryData={getCountryData}
-            countries={getAllItemsFromDataContainer()}
+            countries={favCountries}
             toastMessage="has been removed from favourire."
           />
           <IonList lines="none">
@@ -84,7 +100,7 @@ const Profile: React.FC = (): JSX.Element => {
                 size="small"
                 onClick={() => setRemoveItemAlert(true)}
                 disabled={
-                  getAllItemsFromDataContainer().length === 0 ||
+                  favCountries.length === 0 ||
                   state.favCountryData.name === "" ||
                   state.favCountryData.code === ""
                     ? true
@@ -96,7 +112,7 @@ const Profile: React.FC = (): JSX.Element => {
               </IonButton>
             </IonItem>
           </IonList>
-          {getAllItemsFromDataContainer().length === 0 ||
+          {favCountries.length === 0 ||
           state.favCountryData.name === "" ||
           state.favCountryData.code === "" ? (
             <div />
@@ -210,26 +226,27 @@ const Profile: React.FC = (): JSX.Element => {
               {
                 text: "Okay",
                 handler: () => {
-                  removeItemFromDataContainer(state.favCountryData.code);
-                  const favCountries: ICountryStatistics[] = getAllItemsFromDataContainer();
-                  if (favCountries.length === 0) {
-                    dispatch({
-                      type: "UPDATE_FAV_COUNTRY_DATA",
-                      payload: countriesDataInitial,
-                    });
-                  } else {
-                    dispatch({
-                      type: "UPDATE_FAV_COUNTRY_DATA",
-                      payload: favCountries[0],
-                    });
-                  }
+                  setShowToast(true);
+                  const cntRef = DB.collection("users")
+                    .doc(state.user.uid)
+                    .collection("countries")
+                    .doc(state.favCountryData.code);
+                  cntRef.get().then((doc) => {
+                    if (doc.exists) {
+                      cntRef.delete();
+                    }
+                  });
+                  dispatch({
+                    type: "UPDATE_FAV_COUNTRY_DATA",
+                    payload: countriesDataInitial,
+                  });
                 },
               },
             ]}
           />
           <IonToast
             isOpen={showToast}
-            position="top"
+            position="bottom"
             onDidDismiss={() => setShowToast(false)}
             message={`${state.favCountryData.name} has been removed from your favourite list.`}
             duration={2000}
