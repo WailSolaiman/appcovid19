@@ -1,5 +1,7 @@
 {
   "name": "appcovid19",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }
