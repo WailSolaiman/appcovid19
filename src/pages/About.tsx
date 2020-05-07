@@ -6,9 +6,7 @@ import {
   IonMenuButton,
   IonPage,
   IonItem,
-  IonLabel,
   IonList,
-  IonListHeader,
   IonText,
   IonImg,
 } from "@ionic/react";
@@ -25,9 +23,6 @@ const About: React.FC = (): JSX.Element => {
       </IonHeader>
       <IonContent>
         <IonList lines="none">
-          <IonListHeader>
-            <IonLabel>About AppCovid19.</IonLabel>
-          </IonListHeader>
           <IonItem>
             <IonImg src="./assets/app.svg" alt="about" />
           </IonItem>

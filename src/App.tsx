@@ -44,7 +44,7 @@ const App: React.FC = (): JSX.Element => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonSplitPane contentId="main">
+        <IonSplitPane disabled={true} contentId="main">
           <Menu />
           <IonPage id="main">
             <Tabs>
