@@ -9,7 +9,7 @@ The AppCovid19 app helps you to display the latest information about covid 19 al
 
 ## Tech/framework used
 
-React, Ionic, Capacitor and Typescript.
+React, Ionic, Capacitor, Typescript and firebase.
 
 ## Authors
 
